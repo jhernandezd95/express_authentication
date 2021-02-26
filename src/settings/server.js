@@ -2,12 +2,13 @@ const morgan = require("morgan"),
     express = require("express"),
     passport = require('passport');
 
+require('dotenv').config();
 require('./database');
 
 module.exports = (app) => {
     
     // Settings
-    app.set("port", 3000);
+    app.set("port", process.env.PORT);
 
     // Middlewares
     app.use(morgan('dev'));
