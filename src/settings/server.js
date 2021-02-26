@@ -2,6 +2,8 @@ const morgan = require("morgan"),
     express = require("express"),
     passport = require('passport');
 
+require('./database');
+
 module.exports = (app) => {
     
     // Settings
