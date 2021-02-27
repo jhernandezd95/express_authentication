@@ -100,9 +100,67 @@ async function resendEmail(req, res) {
   }
 }
 
+async function forgotPassword(req, res){
+  try{
+    const user = await UserModel.findOne({email: req.body.email});
+    if(!user){
+      res.status(404).json({error : "User not found"});
+    } else {
+      const token = jwt.sign({ user: user }, process.env.FORGOT_PASSWORD_KEY, {expiresIn: '10m'});
+
+      try{
+        sendEmail.sendMail(user.email, token, 2);
+      } catch(err){
+        res.send(err);
+      }
+  
+      try{
+        await user.updateOne({resetToken: token});
+        res.status(200).json({message: 'The email has been send successfully'})
+      } catch(err){
+        res.send(err);
+      }
+    }
+  } catch(err){
+    res.send(err);
+  }
+}
+
+async function resetPassword(req, res) {
+  const {resetToken, newPassword} = req.body;
+  if(resetToken){
+    try{
+      jwt.verify(resetToken, process.env.FORGOT_PASSWORD_KEY);
+      try{
+        const user = await UserModel.findOne({resetToken: resetToken});
+        if(!user){
+          res.status(401).json({error: "User with this token does not exist."});
+        }
+
+        user.password = newPassword;
+        user.resetToken = undefined;
+        try{
+          await user.save();
+          res.status(200).json({message: "The password has been changed successfully"});
+        } catch(err){
+          res.send(err);
+        }
+      } catch (err){
+        res.send(err);
+      }
+    } catch (err){
+      res.send(err);
+    }
+  } else{
+    res.status(401).json({error: "Token param missing."});
+  }
+}
+
 module.exports = {
     signUp,
     login,
     verifyEmail,
-    resendEmail
+    resendEmail,
+    forgotPassword,
+    resetPassword
 }
