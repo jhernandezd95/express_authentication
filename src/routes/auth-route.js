@@ -9,4 +9,6 @@ router.post('/login', authController.login);
 
 router.get('/verifyEmail', authController.verifyEmail);
 
+router.get('/resendEmail', authController.resendEmail);
+
 module.exports = router;

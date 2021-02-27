@@ -79,8 +79,30 @@ async function verifyEmail(req, res) {
   }
 }
 
+async function resendEmail(req, res) {
+  try{
+    const user = await UserModel.findOne({email: req.body.email});
+    if(!user){
+      res.status(404).json({error : "User not found"});
+    } else {
+      const token = jwt.sign({ user: user }, process.env.ACCOUNT_ACTIVATE_KEY, {expiresIn: '10m'});
+
+      try{
+        sendEmail.sendMail(user.email, token, 1)
+        res.status(200).json({message: "The email has been send successfully"})
+      } catch(err){
+        res.send(err);
+      }
+
+    }
+  } catch (err){
+    res.send(err);
+  }
+}
+
 module.exports = {
     signUp,
     login,
-    verifyEmail
+    verifyEmail,
+    resendEmail
 }
