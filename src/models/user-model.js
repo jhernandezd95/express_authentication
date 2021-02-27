@@ -54,7 +54,7 @@ userModel
   .validate(function (value) {
 
     const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return re.test(String(value).toLowerCase);
+    return re.test(String(value).toLowerCase());
 
 }, 'Email is invalid');
 

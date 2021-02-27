@@ -4,6 +4,7 @@ const morgan = require("morgan"),
 
 require('dotenv').config();
 require('./database');
+require('../middlewares/passport');
 
 module.exports = (app) => {
     
@@ -14,6 +15,9 @@ module.exports = (app) => {
     app.use(morgan('dev'));
     app.use(express.urlencoded({extended: false}));
     app.use(express.json());
+
+    // Routes
+    app.use('/api/auth', require('../routes/auth-route'));
 
     return app;
 }
