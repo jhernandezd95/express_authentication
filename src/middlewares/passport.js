@@ -25,3 +25,19 @@ passport.use(
     });
   }
 ));
+
+passport.use(
+  new JWTstrategy(
+    {
+      secretOrKey: process.env.JWT_KEY,
+      jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme('JWT')
+    },
+    async (token, done) => {
+      try {
+        return done(null, token.user);
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
