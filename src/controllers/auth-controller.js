@@ -56,7 +56,31 @@ async function login(req, res, next) {
   )(req, res, next);
 }
 
+async function verifyEmail(req, res) {
+  const token = req.body.token;
+  try{
+    const data = jwt.verify(token, process.env.ACCOUNT_ACTIVATE_KEY);
+    try{
+      const user = await UserModel.findOneAndUpdate(
+        {_id: data.user._id}, 
+        {isActive: true},
+        {runValidators: 1, passRawResult: true, new:true});
+        if(!user){
+          res.status(404).json({error : "User not found"});
+        } else {
+          res.json({result : "Email is verified of user "+ user._id});
+        }
+    } catch(err){
+      res.send(err);
+    }
+
+  } catch(err){
+    res.send(err);
+  }
+}
+
 module.exports = {
     signUp,
-    login
+    login,
+    verifyEmail
 }
