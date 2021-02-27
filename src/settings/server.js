@@ -15,6 +15,7 @@ module.exports = (app) => {
     app.use(morgan('dev'));
     app.use(express.urlencoded({extended: false}));
     app.use(express.json());
+    app.use(passport.initialize());
 
     // Routes
     app.use('/api/auth', require('../routes/auth-route'));

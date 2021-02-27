@@ -28,7 +28,7 @@ function signUp(req, res) {
 
 async function login(req, res, next) {
   passport.authenticate(
-    'login',
+    'local',
     async (err, user, info) => {
       try {
         if (err || !user) {
