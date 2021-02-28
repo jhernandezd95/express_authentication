@@ -1,6 +1,7 @@
 const morgan = require("morgan"),
     express = require("express"),
-    passport = require('passport');
+    passport = require('passport'),
+    {requestLoggin, errorLoggin} = require('../middlewares/winston');
 
 require('dotenv').config();
 require('./database');
@@ -17,8 +18,12 @@ module.exports = (app) => {
     app.use(express.json());
     app.use(passport.initialize());
 
+    app.use(requestLoggin);
+
     // Routes
     app.use('/api/auth', require('../routes/auth-route'));
+
+    app.use(errorLoggin);
 
     return app;
 }
