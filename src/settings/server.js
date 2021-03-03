@@ -1,11 +1,16 @@
 const morgan = require("morgan"),
     express = require("express"),
     passport = require('passport'),
-    {requestLoggin, errorLoggin} = require('../middlewares/winston');
+    swaggerJsdoc = require("swagger-jsdoc"),
+    swaggerUi = require("swagger-ui-express"),
+    {requestLoggin, errorLoggin} = require('../middlewares/winston'),
+    {options} = require('./swagger-options');
 
 require('dotenv').config();
 require('./database');
 require('../middlewares/passport');
+  
+const swaggerSpec = swaggerJsdoc(options);
 
 module.exports = (app) => {
     
@@ -21,6 +26,8 @@ module.exports = (app) => {
     app.use(requestLoggin);
 
     // Routes
+    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
     app.use('/api/auth', require('../routes/auth-route'));
 
     app.use(errorLoggin);
