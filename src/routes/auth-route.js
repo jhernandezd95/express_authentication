@@ -224,6 +224,40 @@ router.get('/resendEmail', authController.resendEmail);
  */
 router.get('/forgotPassword', authController.forgotPassword);
 
+/**
+ * @openapi
+ * /auth/resetPassword:
+ *   put:
+ *     description: Check token and if is correct change the password.
+ *     requestBody:
+ *       content:
+ *          'application/json':
+ *            schema:
+ *              type: object
+ *              properties:
+ *                resetToken:
+ *                  type: string
+ *                newPassword:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Password was change successfull.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '400':
+ *         description: Some field is wrong
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *       '500':
+ *         description: Error server
+ */
 router.put('/resetPassword', authController.resetPassword);
 
 module.exports = router;
