@@ -157,6 +157,37 @@ router.post('/login', authController.login);
  */
 router.get('/verifyToken', authController.verifyToken);
 
+/**
+ * @openapi
+ * /auth/resendEmail:
+ *   get:
+ *     description: Resend confirmation email.
+ *     requestBody:
+ *       content:
+ *          'application/json':
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: email
+ *     responses:
+ *       200:
+ *         description: Email was sending successfull.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '400':
+ *         description: Some field is wrong
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *      
+ */
 router.get('/resendEmail', authController.resendEmail);
 
 router.get('/forgotPassword', authController.forgotPassword);
