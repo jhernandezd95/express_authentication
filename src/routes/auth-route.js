@@ -83,6 +83,45 @@ const express = require('express'),
  */
 router.post('/signup', authController.signUp);
 
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     description: Login a active user and return token.
+ *     requestBody:
+ *       content:
+ *          'application/json':
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: email
+ *                  description: User email.
+ *                  example: test@email.com
+ *                password:
+ *                  type: string
+ *                  description: User password.
+ *     responses:
+ *       200:
+ *         description: Return token and data of logged user.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   $ref: '#/components/schemas/User'
+ *                 token:
+ *                   type: string
+ *       '400':
+ *         description: Some field is wrong
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *      
+ */
 router.post('/login', authController.login);
 
 router.get('/verifyEmail', authController.verifyEmail);
