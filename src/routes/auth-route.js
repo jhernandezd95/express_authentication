@@ -190,6 +190,38 @@ router.get('/verifyToken', authController.verifyToken);
  */
 router.get('/resendEmail', authController.resendEmail);
 
+/**
+ * @openapi
+ * /auth/forgotPassword:
+ *   get:
+ *     description: Send token to the given email.
+ *     requestBody:
+ *       content:
+ *          'application/json':
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: email
+ *     responses:
+ *       200:
+ *         description: Email was sending successfull.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '400':
+ *         description: Some field is wrong
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *       '500':
+ *         description: Error server
+ */
 router.get('/forgotPassword', authController.forgotPassword);
 
 router.put('/resetPassword', authController.resetPassword);
