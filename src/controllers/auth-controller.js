@@ -56,7 +56,7 @@ async function login(req, res, next) {
   )(req, res, next);
 }
 
-async function verifyEmail(req, res) {
+async function verifyToken(req, res) {
   const token = req.body.token;
   try{
     const data = jwt.verify(token, process.env.ACCOUNT_ACTIVATE_KEY);
@@ -159,7 +159,7 @@ async function resetPassword(req, res) {
 module.exports = {
     signUp,
     login,
-    verifyEmail,
+    verifyToken,
     resendEmail,
     forgotPassword,
     resetPassword

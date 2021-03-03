@@ -124,7 +124,38 @@ router.post('/signup', authController.signUp);
  */
 router.post('/login', authController.login);
 
-router.get('/verifyEmail', authController.verifyEmail);
+/**
+ * @openapi
+ * /auth/verifyToken:
+ *   get:
+ *     description: Verifies the token and if it is correct activate the user.
+ *     requestBody:
+ *       content:
+ *          'application/json':
+ *            schema:
+ *              type: object
+ *              properties:
+ *                token:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Token sent is correct and the user was activate.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       '400':
+ *         description: Some field is wrong
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *      
+ */
+router.get('/verifyToken', authController.verifyToken);
 
 router.get('/resendEmail', authController.resendEmail);
 
