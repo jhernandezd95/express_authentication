@@ -3,6 +3,7 @@ const passport = require('passport');
 const UserModel = require('../models/user-model');
 
 const sendEmail = require('../helpers/send-mail');
+const {mongoErrorCather} = require('../helpers/handle-error');
 
 function signUp(req, res) {
   
@@ -13,7 +14,7 @@ function signUp(req, res) {
       try{
         sendEmail.sendMail(user.email, token, 1);
       } catch(err){
-        res.json(err);
+        res.status(500).send(err);
       }
 
       res.status(200).json({
@@ -22,7 +23,8 @@ function signUp(req, res) {
       });
     })
     .catch((error) => {
-      res.status(400).send(error)
+      const mongoError = mongoErrorCather(error)
+      res.status(400).send(mongoError)
     })
 }
 
