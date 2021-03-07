@@ -121,7 +121,19 @@ router.post('/signup', authController.signUp);
  *                 token:
  *                   type: string
  *       '400':
- *         description: Some field is wrong
+ *         description: Email or password is missing.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *       '401':
+ *         description: User not found. Incorrect email or password.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorModel'
+ *       '403':
+ *         description: User not active
  *         content: 
  *           'application/json':
  *             schema:
