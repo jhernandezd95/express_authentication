@@ -9,16 +9,22 @@ const express = require('express'),
  *   schemas:
  *     ErrorModel:
  *       type: object
- *       required:
- *        - message
- *        - code
  *       properties:
+ *         name:
+ *           type: string
  *         message:
  *           type: string
- *         code:
- *           type: integer
- *           minimum: 100
- *           maximum: 600
+ *         details:
+ *           type: object
+ *           properties:
+ *             field:
+ *              type: string
+ *             value:
+ *              type: string
+ *             issue:
+ *              type: string
+ *         requestId:
+ *           type: string
  *     User:
  *       description: A representation of a user
  *       allOf:
