@@ -10,6 +10,8 @@ const express = require('express'),
  *     ErrorModel:
  *       type: object
  *       properties:
+ *         code:
+ *           type: number
  *         name:
  *           type: string
  *         message:

@@ -1,5 +1,6 @@
-const errorFormat = (name, message, field, value, issue, requestId) => {
+const errorFormat = (code, name, message, field, value, issue, requestId) => {
     return {
+        code,
         name,
         message,
         details: {
@@ -50,6 +51,7 @@ function mongoErrorCather(err, req_id, uuidPath, uuidValue) {
     let path = "" || uuidPath
     let type = ""
     let message = ""
+    let code = ""
     if (err.message == "Invalid UUID") {
         name = "TypeError"
         type = err.message
@@ -61,23 +63,26 @@ function mongoErrorCather(err, req_id, uuidPath, uuidValue) {
             path = err.errors[x].path
             type = err.errors[x].kind
             console.log(type);
+            code = 400
         } else {
             name = err.errors[x].name
             value = err.errors[x].properties.value
             path = err.errors[x].properties.path
             type = err.errors[x].properties.type
             message = err.errors[x].properties.message
+            code = 400
         }
     } else if (err.driver != null) {
         name = "DuplicatedKey"
         value = err.keyValue[Object.keys(err.keyValue)]
         path = Object.keys(err.keyPattern)[0]
         type = "DuplicatedKeyValue"
+        code = 400
     } else {
         return err
     }
 
-    let result = errorFormat(name, _errorMessage(type, message, path), path, value, type, req_id)
+    let result = errorFormat(code, name, _errorMessage(type, message, path), path, value, type, req_id)
     return result
 }
 
