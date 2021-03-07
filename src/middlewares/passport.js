@@ -14,11 +14,11 @@ passport.use(
       if (err) { return done(err); }
       
       if (!user || !user.isValidPassword(password)) { 
-        return done(null, false, { code: 401, message: 'Incorrect email or password.' });
+        return done(null, false, { name: 'UserNotFound' });
       }
 
       if(!user.isActive){
-        return done(null, false, { code: 403, message: 'User not active' });
+        return done(null, false, { name: 'NotActive' });
       }
 
       return done(null, user);

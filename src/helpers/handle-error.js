@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
-
-function errorFormat(name, message, field, value, issue, requestId) {
-    const errorFormat = {
+const errorFormat = (name, message, field, value, issue, requestId) => {
+    return {
         name,
         message,
         details: {
@@ -11,7 +9,6 @@ function errorFormat(name, message, field, value, issue, requestId) {
         },
         requestId
     };
-    return errorFormat
 }
 
 
@@ -85,5 +82,6 @@ function mongoErrorCather(err, req_id, uuidPath, uuidValue) {
 }
 
 module.exports = {
-    mongoErrorCather
+    mongoErrorCather,
+    errorFormat
 }

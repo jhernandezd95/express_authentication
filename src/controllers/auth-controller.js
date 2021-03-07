@@ -3,7 +3,7 @@ const passport = require('passport');
 const UserModel = require('../models/user-model');
 
 const sendEmail = require('../helpers/send-mail');
-const {mongoErrorCather} = require('../helpers/handle-error');
+const handleError = require('../helpers/handle-error');
 
 function signUp(req, res) {
   
@@ -23,7 +23,7 @@ function signUp(req, res) {
       });
     })
     .catch((error) => {
-      const mongoError = mongoErrorCather(error)
+      const mongoError = handleError.mongoErrorCather(error)
       res.status(400).send(mongoError)
     })
 }
@@ -35,8 +35,33 @@ async function login(req, res, next) {
       try {
         if (err || !user) {
           
-          const code = info.message === 'Missing credentials'? 400 : info.code;
-          return res.status(code).send(info);
+          var errorFormat = {}
+          switch(info.name){
+            case 'NotActive':
+              errorFormat = {
+                code: 403,
+                name: info.name,
+                message: 'User not active',
+                requestId: ''
+              };
+              break;
+              case 'UserNotFound':
+                errorFormat = {
+                  code: 401,
+                  name: info.name,
+                  message: 'Incorrect email or password',
+                  requestId: ''
+                };
+                break;
+              default:
+                errorFormat = {
+                  code: 400,
+                  name: 'MissingCredentials',
+                  message: 'Email and password fields are required',
+                  requestId: ''
+                };
+          }
+          return res.status(errorFormat.code).send(errorFormat);
         }
 
         req.login(
@@ -52,7 +77,8 @@ async function login(req, res, next) {
           }
         );
       } catch (error) {
-        return next(error);
+        const mongoError = handleError.mongoErrorCather(error)
+        return next(mongoError);
       }
     }
   )(req, res, next);
