@@ -232,7 +232,18 @@ router.get('/verifyToken', authController.verifyToken);
  *           'application/json':
  *             schema:
  *               $ref: '#/components/schemas/MongoErrorModel'
- *      
+ *       '404':
+ *         description: User not found
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
+ *       '500':
+ *         description: Problem sending a mail
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
  */
 router.get('/resendEmail', authController.resendEmail);
 

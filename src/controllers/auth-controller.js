@@ -126,7 +126,13 @@ async function resendEmail(req, res) {
   try{
     const user = await UserModel.findOne({email: req.body.email});
     if(!user){
-      res.status(404).json({error : "User not found"});
+      const errorFormat = {
+        code: 404,
+        name: "UserNotFound",
+        message: 'User not found with that id.',
+        requestId: ''
+      };
+      res.status(errorFormat.code).send(errorFormat);
     } else {
       const token = jwt.sign({ user: user }, process.env.ACCOUNT_ACTIVATE_KEY, {expiresIn: '10m'});
 
@@ -134,12 +140,19 @@ async function resendEmail(req, res) {
         sendEmail.sendMail(user.email, token, 1)
         res.status(200).json({message: "The email has been send successfully"})
       } catch(err){
-        res.send(err);
+        const errorFormat = {
+          code: 500,
+          name: "NodeMailerError",
+          message: 'Issue sending a mail.',
+          requestId: ''
+        };
+        res.status(errorFormat.code).send(errorFormat);
       }
 
     }
   } catch (err){
-    res.send(err);
+      const mongoError = handleError.mongoErrorCather(error);
+      res.status(mongoError.code).send(mongoError);
   }
 }
 
