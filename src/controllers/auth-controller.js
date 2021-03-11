@@ -14,7 +14,13 @@ function signUp(req, res) {
       try{
         sendEmail.sendMail(user.email, token, 1);
       } catch(err){
-        res.status(500).send(err);
+        const errorFormat = {
+          code: 500,
+          name: "NodeMailerError",
+          message: 'Issue sending a mail.',
+          requestId: ''
+        };
+        res.status(errorFormat.code).send(errorFormat);
       }
 
       res.status(200).json({
@@ -24,7 +30,7 @@ function signUp(req, res) {
     })
     .catch((error) => {
       const mongoError = handleError.mongoErrorCather(error)
-      res.status(400).send(mongoError)
+      res.status(mongoError.code).send(mongoError)
     })
 }
 

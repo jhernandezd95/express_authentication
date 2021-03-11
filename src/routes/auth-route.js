@@ -98,11 +98,17 @@ const express = require('express'),
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       '400':
- *         description: Some field is wrong
+ *         description: Mongo error when create user.
  *         content: 
  *           'application/json':
  *             schema:
  *               $ref: '#/components/schemas/MongoErrorModel'
+ *       '500':
+ *         description: Problem sending a mail
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
  */
 router.post('/signup', authController.signUp);
 
