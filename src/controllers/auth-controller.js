@@ -94,16 +94,31 @@ async function verifyToken(req, res) {
         {isActive: true},
         {runValidators: 1, passRawResult: true, new:true});
         if(!user){
-          res.status(404).json({error : "User not found"});
+          const errorFormat = {
+            code: 404,
+            name: "UserNotFound",
+            message: 'User not found with that id.',
+            requestId: ''
+          };
+          res.status(errorFormat.code).send(errorFormat);
         } else {
           res.json({result : "Email is verified of user "+ user._id});
         }
     } catch(err){
-      res.send(err);
+      const mongoError = handleError.mongoErrorCather(error);
+      res.status(400).send(mongoError);
     }
 
   } catch(err){
-    res.send(err);
+    const errorFormat = {
+      code: 401,
+      name: err.name,
+      message: err.message,
+      expiredAt: err.expiredAt,
+      date: err.date,
+      requestId: ''
+    };
+    res.status(errorFormat.code).send(errorFormat);
   }
 }
 

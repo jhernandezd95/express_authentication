@@ -45,7 +45,7 @@ function _errorMessage(type, defaultMessage, path){
     return message;
 }
 
-function mongoErrorCather(err, req_id, uuidPath, uuidValue) {
+function mongoErrorCather(err, req_id) {
     let name = ""
     let value = "" || uuidValue
     let path = "" || uuidPath

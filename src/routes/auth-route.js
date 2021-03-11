@@ -7,7 +7,22 @@ const express = require('express'),
  * @openapi
  * components:
  *   schemas:
- *     ErrorModel:
+ *     BasicErrorModel:
+ *       type: object
+ *       properties:
+ *         code:
+ *           type: number
+ *         name:
+ *           type: string
+ *         message:
+ *           type: string
+ *         expiredAt:
+ *           type: string
+ *         date:
+ *           type: string
+ *         requestId:
+ *           type: string
+ *     MongoErrorModel:
  *       type: object
  *       properties:
  *         code:
@@ -87,7 +102,7 @@ const express = require('express'),
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  */
 router.post('/signup', authController.signUp);
 
@@ -127,19 +142,19 @@ router.post('/signup', authController.signUp);
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  *       '401':
  *         description: User not found. Incorrect email or password.
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  *       '403':
  *         description: User not active
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  *      
  */
 router.post('/login', authController.login);
@@ -168,12 +183,23 @@ router.post('/login', authController.login);
  *                 message:
  *                   type: string
  *       '400':
- *         description: Some field is wrong
+ *         description: Mongodb error when update isActive field in user model.
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
- *      
+ *               $ref: '#/components/schemas/MongoErrorModel'
+ *       '401':
+ *         description: JWT is not valid.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
+ *       '404':
+ *         description: User not found
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
  */
 router.get('/verifyToken', authController.verifyToken);
 
@@ -205,7 +231,7 @@ router.get('/verifyToken', authController.verifyToken);
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  *      
  */
 router.get('/resendEmail', authController.resendEmail);
@@ -238,7 +264,7 @@ router.get('/resendEmail', authController.resendEmail);
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  *       '500':
  *         description: Error server
  */
@@ -274,7 +300,7 @@ router.get('/forgotPassword', authController.forgotPassword);
  *         content: 
  *           'application/json':
  *             schema:
- *               $ref: '#/components/schemas/ErrorModel'
+ *               $ref: '#/components/schemas/MongoErrorModel'
  *       '500':
  *         description: Error server
  */
