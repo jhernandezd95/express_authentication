@@ -108,7 +108,7 @@ async function verifyToken(req, res) {
           };
           res.status(errorFormat.code).send(errorFormat);
         } else {
-          res.json({result : "Email is verified of user "+ user._id});
+          res.status(200).send({message : "Email is verified of user "+ user._id});
         }
     } catch(err){
       const mongoError = handleError.mongoErrorCather(error);
