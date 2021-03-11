@@ -195,7 +195,7 @@ router.post('/login', authController.login);
  *             schema:
  *               $ref: '#/components/schemas/MongoErrorModel'
  *       '401':
- *         description: JWT is not valid.
+ *         description: Error with token sended.
  *         content: 
  *           'application/json':
  *             schema:
@@ -323,13 +323,23 @@ router.get('/forgotPassword', authController.forgotPassword);
  *                 message:
  *                   type: string
  *       '400':
- *         description: Some field is wrong
+ *         description: MongoError when find user or change password.
  *         content: 
  *           'application/json':
  *             schema:
  *               $ref: '#/components/schemas/MongoErrorModel'
- *       '500':
- *         description: Error server
+ *       '401':
+ *         description: Error with token sended.
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
+ *       '404':
+ *         description: User not found with that token
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
  */
 router.put('/resetPassword', authController.resetPassword);
 
