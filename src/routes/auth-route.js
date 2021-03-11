@@ -277,13 +277,23 @@ router.get('/resendEmail', authController.resendEmail);
  *                 message:
  *                   type: string
  *       '400':
- *         description: Some field is wrong
+ *         description: MongoError when find user or update user
  *         content: 
  *           'application/json':
  *             schema:
  *               $ref: '#/components/schemas/MongoErrorModel'
+ *       '404':
+ *         description: User not found
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
  *       '500':
- *         description: Error server
+ *         description: Problem sending a mail
+ *         content: 
+ *           'application/json':
+ *             schema:
+ *               $ref: '#/components/schemas/BasicErrorModel'
  */
 router.get('/forgotPassword', authController.forgotPassword);
 

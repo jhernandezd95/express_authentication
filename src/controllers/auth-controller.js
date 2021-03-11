@@ -135,7 +135,7 @@ async function resendEmail(req, res) {
       const errorFormat = {
         code: 404,
         name: "UserNotFound",
-        message: 'User not found with that id.',
+        message: 'User not found with that email.',
         requestId: ''
       };
       res.status(errorFormat.code).send(errorFormat);
@@ -166,25 +166,39 @@ async function forgotPassword(req, res){
   try{
     const user = await UserModel.findOne({email: req.body.email});
     if(!user){
-      res.status(404).json({error : "User not found"});
+      const errorFormat = {
+        code: 404,
+        name: "UserNotFound",
+        message: 'User not found with that email.',
+        requestId: ''
+      };
+      res.status(errorFormat.code).send(errorFormat);
     } else {
       const token = jwt.sign({ user: user }, process.env.FORGOT_PASSWORD_KEY, {expiresIn: '10m'});
 
       try{
         sendEmail.sendMail(user.email, token, 2);
       } catch(err){
-        res.send(err);
+        const errorFormat = {
+          code: 500,
+          name: "NodeMailerError",
+          message: 'Issue sending a mail.',
+          requestId: ''
+        };
+        res.status(errorFormat.code).send(errorFormat);
       }
   
       try{
         await user.updateOne({resetToken: token});
         res.status(200).json({message: 'The email has been send successfully'})
       } catch(err){
-        res.send(err);
+          const mongoError = handleError.mongoErrorCather(error);
+          res.status(mongoError.code).send(mongoError);
       }
     }
   } catch(err){
-    res.send(err);
+      const mongoError = handleError.mongoErrorCather(error);
+      res.status(mongoError.code).send(mongoError);
   }
 }
 
