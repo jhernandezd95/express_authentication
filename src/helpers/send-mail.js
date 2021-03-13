@@ -9,7 +9,7 @@ const forgotPassword = (token) => `
     <h2>Please click on given <a href='http://${process.env.CLIENT_URL}/resetpassword/${token}'>link</a> to reset your password</h2>
 `
 const body = (token, type) => {
-    var message = '';
+    let message = '';
     switch(type){
         case 1: 
             message = activationAccount(token);
@@ -18,11 +18,15 @@ const body = (token, type) => {
         case 2: 
             message = forgotPassword(token);
             break;
+        default:
+            message = 'Something wrong'
+            break;
     }
     return message;
 }
 
 async function sendMail(email, token, type){
+    // eslint-disable-next-line no-useless-catch
     try{
         await transporter.sendMail({
             from: '"Jorge" <jhernandezd95@gmail.com>', // sender address

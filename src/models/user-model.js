@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 const { Schema } = mongoose;
 
@@ -33,15 +34,26 @@ const userModel = new Schema(
 );
 
 // Hash password
-userModel.pre('save', async (next) => {
-  const hash = await bcrypt.hash(this.password, 10);
+userModel.pre('save', async function (next) {
+    const user = this;
 
-  this.password = hash;
-  next();
-});
+    // generate a salt
+    bcrypt.genSalt(Number(process.env.SALT_WORK_FACTOR), (err, salt) => {
+      if (err) return next(err);
+
+      // hash the password using our new salt
+      bcrypt.hash(user.password, salt, (error, hash) => {
+          if (error) return next(error);
+          // override the cleartext password with the hashed one
+          user.password = hash;
+          next();
+      });
+  });
+  }
+);
 
 // Check if passwords matches
-userModel.methods.isValidPassword = async (password) => {
+userModel.methods.comparePasswords = async (password) => {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
 

@@ -13,7 +13,7 @@ passport.use(
     UserModel.findOne({ email }, (err, user) => {
       if (err) { return done(err); }
       
-      if (!user || !user.isValidPassword(password)) { 
+      if (!user || !user.comparePasswords(password)) { 
         return done(null, false, { name: 'UserNotFound' });
       }
 

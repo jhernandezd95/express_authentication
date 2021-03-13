@@ -49,12 +49,12 @@ function mongoErrorCather(err, requestId) {
     let path = "" 
     let type = ""
     let message = ""
-    let code = ""
+    let code = 500
     if (err.message === "Invalid UUID") {
         name = "TypeError"
         type = err.message
-    } else if (err.errors !== null) {
-        const x = Object.keys(err.errors)[0]
+    } else if (err.errors != null) {
+    const x = Object.keys(err.errors)[0]
         if (err.errors[x].reason !== null) {
             name = "TypeError";
             value = err.errors[x].value;
@@ -69,7 +69,7 @@ function mongoErrorCather(err, requestId) {
             message = err.errors[x].properties.message
             code = 400
         }
-    } else if (err.driver !== null) {
+    } else if (err.driver != null) {
         name = "DuplicatedKey"
         value = err.keyValue[Object.keys(err.keyValue)]
         // eslint-disable-next-line prefer-destructuring

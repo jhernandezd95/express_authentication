@@ -9,7 +9,7 @@ function signUp(req, res) {
   
   UserModel.create(req.body)
     .then((user) => {
-      const token = jwt.sign(user, process.env.ACCOUNT_ACTIVATE_KEY, {expiresIn: '10m'});
+      const token = jwt.sign({user}, process.env.ACCOUNT_ACTIVATE_KEY, {expiresIn: '10m'});
   
       try{
         sendEmail.sendMail(user.email, token, 1);
@@ -23,10 +23,7 @@ function signUp(req, res) {
         res.status(errorFormat.code).send(errorFormat);
       }
 
-      res.status(200).json({
-        message: 'Signup successful',
-        user: req.user
-      });
+      res.status(200).send({message: 'Signup successful'});
     })
     .catch((error) => {
       const mongoError = handleError.mongoErrorCather(error)
