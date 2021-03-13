@@ -41,7 +41,7 @@ async function login(req, res, next) {
       try {
         if (err || !user) {
           
-          var errorFormat = {}
+          let errorFormat = {}
           switch(info.name){
             case 'NotActive':
               errorFormat = {
@@ -91,9 +91,8 @@ async function login(req, res, next) {
 }
 
 async function verifyToken(req, res) {
-  const token = req.body.token;
   try{
-    const data = jwt.verify(token, process.env.ACCOUNT_ACTIVATE_KEY);
+    const data = jwt.verify(req.body.token, process.env.ACCOUNT_ACTIVATE_KEY);
     try{
       const user = await UserModel.findOneAndUpdate(
         {_id: data.user._id}, 
@@ -108,9 +107,9 @@ async function verifyToken(req, res) {
           };
           res.status(errorFormat.code).send(errorFormat);
         } else {
-          res.status(200).send({message : "Email is verified of user "+ user._id});
+          res.status(200).send({message : `Email is verified of user ${user._id}`});
         }
-    } catch(err){
+    } catch(error){
       const mongoError = handleError.mongoErrorCather(error);
       res.status(400).send(mongoError);
     }
@@ -140,11 +139,11 @@ async function resendEmail(req, res) {
       };
       res.status(errorFormat.code).send(errorFormat);
     } else {
-      const token = jwt.sign({ user: user }, process.env.ACCOUNT_ACTIVATE_KEY, {expiresIn: '10m'});
+      const token = jwt.sign({ user }, process.env.ACCOUNT_ACTIVATE_KEY, {expiresIn: '10m'});
 
       try{
         sendEmail.sendMail(user.email, token, 1)
-        res.status(200).json({message: "The email has been send successfully"})
+        res.status(200).json({message: 'The email has been send successfully'})
       } catch(err){
         const errorFormat = {
           code: 500,
@@ -156,7 +155,7 @@ async function resendEmail(req, res) {
       }
 
     }
-  } catch (err){
+  } catch (error){
       const mongoError = handleError.mongoErrorCather(error);
       res.status(mongoError.code).send(mongoError);
   }
@@ -174,14 +173,14 @@ async function forgotPassword(req, res){
       };
       res.status(errorFormat.code).send(errorFormat);
     } else {
-      const token = jwt.sign({ user: user }, process.env.FORGOT_PASSWORD_KEY, {expiresIn: '10m'});
+      const token = jwt.sign({ user }, process.env.FORGOT_PASSWORD_KEY, {expiresIn: '10m'});
 
       try{
         sendEmail.sendMail(user.email, token, 2);
       } catch(err){
         const errorFormat = {
           code: 500,
-          name: "NodeMailerError",
+          name: 'NodeMailerError',
           message: 'Issue sending a mail.',
           requestId: ''
         };
@@ -191,12 +190,12 @@ async function forgotPassword(req, res){
       try{
         await user.updateOne({resetToken: token});
         res.status(200).json({message: 'The email has been send successfully'})
-      } catch(err){
+      } catch(error){
           const mongoError = handleError.mongoErrorCather(error);
           res.status(mongoError.code).send(mongoError);
       }
     }
-  } catch(err){
+  } catch(error){
       const mongoError = handleError.mongoErrorCather(error);
       res.status(mongoError.code).send(mongoError);
   }
@@ -207,7 +206,7 @@ async function resetPassword(req, res) {
   try{
     jwt.verify(resetToken, process.env.FORGOT_PASSWORD_KEY);
     try{
-      const user = await UserModel.findOne({resetToken: resetToken});
+      const user = await UserModel.findOne({resetToken});
       if(!user){
         const errorFormat = {
           code: 404,
@@ -223,11 +222,11 @@ async function resetPassword(req, res) {
       try{
         await user.save();
         res.status(200).json({message: "The password has been changed successfully"});
-      } catch(err){
+      } catch(error){
           const mongoError = handleError.mongoErrorCather(error);
           res.status(mongoError.code).send(mongoError);
       }
-    } catch (err){
+    } catch (error){
         const mongoError = handleError.mongoErrorCather(error);
         res.status(mongoError.code).send(mongoError);
     }

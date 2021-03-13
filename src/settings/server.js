@@ -1,10 +1,11 @@
-const morgan = require("morgan"),
-    express = require("express"),
-    passport = require('passport'),
-    swaggerJsdoc = require("swagger-jsdoc"),
-    swaggerUi = require("swagger-ui-express"),
-    {requestLoggin, errorLoggin} = require('../middlewares/winston'),
-    {options} = require('./swagger-options');
+/* eslint-disable global-require */
+const morgan = require("morgan");
+const express = require("express");
+const passport = require('passport');
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const {requestLoggin, errorLoggin} = require('../middlewares/winston');
+const {options} = require('./swagger-options');
 
 require('dotenv').config();
 require('./database');
@@ -27,7 +28,6 @@ module.exports = (app) => {
 
     // Routes
     app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
     app.use('/api/auth', require('../routes/auth-route'));
 
     app.use(errorLoggin);

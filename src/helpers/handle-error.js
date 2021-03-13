@@ -1,5 +1,4 @@
-const errorFormat = (code, name, message, field, value, issue, requestId) => {
-    return {
+const errorFormat = (code, name, message, field, value, issue, requestId) => ({
         code,
         name,
         message,
@@ -9,12 +8,11 @@ const errorFormat = (code, name, message, field, value, issue, requestId) => {
             issue,
         },
         requestId
-    };
-}
+    });
 
 
 function _errorMessage(type, defaultMessage, path){
-    var message = '';
+    let message = '';
     switch(type){
         case 'minlength': 
             message = 'Value is shorter than the minimum allowed length';
@@ -45,24 +43,23 @@ function _errorMessage(type, defaultMessage, path){
     return message;
 }
 
-function mongoErrorCather(err, req_id) {
+function mongoErrorCather(err, requestId) {
     let name = ""
-    let value = "" || uuidValue
-    let path = "" || uuidPath
+    let value = ""
+    let path = "" 
     let type = ""
     let message = ""
     let code = ""
-    if (err.message == "Invalid UUID") {
+    if (err.message === "Invalid UUID") {
         name = "TypeError"
         type = err.message
-    } else if (err.errors != null) {
-        let x = Object.keys(err.errors)[0]
-        if (err.errors[x].reason != null) {
+    } else if (err.errors !== null) {
+        const x = Object.keys(err.errors)[0]
+        if (err.errors[x].reason !== null) {
             name = "TypeError";
             value = err.errors[x].value;
             path = err.errors[x].path
             type = err.errors[x].kind
-            console.log(type);
             code = 400
         } else {
             name = err.errors[x].name
@@ -72,9 +69,10 @@ function mongoErrorCather(err, req_id) {
             message = err.errors[x].properties.message
             code = 400
         }
-    } else if (err.driver != null) {
+    } else if (err.driver !== null) {
         name = "DuplicatedKey"
         value = err.keyValue[Object.keys(err.keyValue)]
+        // eslint-disable-next-line prefer-destructuring
         path = Object.keys(err.keyPattern)[0]
         type = "DuplicatedKeyValue"
         code = 400
@@ -82,7 +80,7 @@ function mongoErrorCather(err, req_id) {
         return err
     }
 
-    let result = errorFormat(code, name, _errorMessage(type, message, path), path, value, type, req_id)
+    const result = errorFormat(code, name, _errorMessage(type, message, path), path, value, type, requestId)
     return result
 }
 
